@@ -201,7 +201,7 @@ impl Opt8n {
 
         for tx in &transactions {
             if let Some(receipt) = self.eth_api.backend.transaction_receipt(tx.hash()).await? {
-                receipts.push(receipt.try_into()?);
+                receipts.push(receipt.into()?);
             }
             self.execution_fixture.transactions.push(tx.to_owned());
         }
