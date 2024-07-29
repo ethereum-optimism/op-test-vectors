@@ -24,6 +24,7 @@ cast.workspace = true
 forge-script.workspace = true
 revm.workspace = true
 op-alloy-rpc-types.workspace = true
+inquire.workspace = true
 
 # External
 serde = { version = "1.0", features = ["derive"] }

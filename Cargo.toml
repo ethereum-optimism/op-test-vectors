@@ -23,6 +23,7 @@ tokio = { version = "1", features = ["full"] }
 futures = "0.3"
 clap = { version = "4", features = ["derive"] }
 shellwords = "1"
+inquire = "0.7"
 
 # Eth
 op-alloy-rpc-types = "0.1.4"
