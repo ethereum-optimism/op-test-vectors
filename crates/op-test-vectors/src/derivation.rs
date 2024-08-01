@@ -3,6 +3,7 @@
 use alloy_consensus::Blob;
 use alloy_primitives::{Bytes, B256};
 use serde::{Deserialize, Serialize};
+use kona_derive::types::L2PayloadAttributes;
 
 /// The derivation fixture is the top-level object that contains
 /// everything needed to run a derivation test.
@@ -11,16 +12,16 @@ use serde::{Deserialize, Serialize};
 pub struct DerivationFixture {
     /// A list of L1 Blocks to derive from.
     pub l1_blocks: Vec<FixtureBlock>,
-    /// A list of L2 Output Roots to assert against.
-    pub l2_output_roots: Vec<B256>,
+    /// A list of L2 payload attributes to assert against.
+    pub l2_payloads: Vec<L2PayloadAttributes>,
 }
 
 impl DerivationFixture {
-    /// Constructs a new [DerivationFixture] with the given L1 blocks and L2 output roots.
-    pub fn new(l1_blocks: Vec<FixtureBlock>, l2_output_roots: Vec<B256>) -> Self {
+    /// Constructs a new [DerivationFixture] with the given L1 blocks and L2 Payload Attributes.
+    pub fn new(l1_blocks: Vec<FixtureBlock>, l2_payloads: Vec<L2PayloadAttributes>) -> Self {
         Self {
             l1_blocks,
-            l2_output_roots,
+            l2_payloads,
         }
     }
 }
@@ -83,10 +84,10 @@ mod tests {
         ]
     }
 
-    fn ref_l2_output_roots() -> Vec<B256> {
+    fn ref_payload_attributes() -> Vec<L2PayloadAttributes> {
         vec![
-            b256!("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"),
-            b256!("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"),
+            L2PayloadAttributes::default(),
+            L2PayloadAttributes::default(),
         ]
     }
 
@@ -96,7 +97,7 @@ mod tests {
         let fixture: DerivationFixture = serde_json::from_str(fixture_str).unwrap();
         let expected = DerivationFixture {
             l1_blocks: ref_blocks(),
-            l2_output_roots: ref_l2_output_roots(),
+            l2_payloads: ref_payload_attributes(),
         };
         assert_eq!(fixture, expected);
     }

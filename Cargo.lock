@@ -4050,7 +4050,7 @@ dependencies = [
 [[package]]
 name = "kona-derive"
 version = "0.0.2"
-source = "git+https://github.com/ethereum-optimism/kona?branch=refcell/bump-alloy-deps#6ad6e248a88ac71ea6d6ba5f85b4ec790808c3bf"
+source = "git+https://github.com/ethereum-optimism/kona?rev=6f7c119d93c854d31de27feadbe11362bafe9cfc#6f7c119d93c854d31de27feadbe11362bafe9cfc"
 dependencies = [
  "alloc-no-stdlib",
  "alloy-consensus",
@@ -4085,7 +4085,7 @@ dependencies = [
 [[package]]
 name = "kona-primitives"
 version = "0.0.1"
-source = "git+https://github.com/ethereum-optimism/kona?branch=refcell/bump-alloy-deps#6ad6e248a88ac71ea6d6ba5f85b4ec790808c3bf"
+source = "git+https://github.com/ethereum-optimism/kona?rev=6f7c119d93c854d31de27feadbe11362bafe9cfc#6f7c119d93c854d31de27feadbe11362bafe9cfc"
 dependencies = [
  "alloy-consensus",
  "alloy-eips",
@@ -4570,6 +4570,7 @@ dependencies = [
  "alloy-rpc-types",
  "anvil-core",
  "color-eyre",
+ "kona-derive",
  "op-alloy-consensus",
  "op-alloy-rpc-types",
  "serde",
