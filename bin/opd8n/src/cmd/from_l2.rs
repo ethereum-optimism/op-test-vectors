@@ -1,8 +1,6 @@
 //! From L2 Subcommand
 
-use std::sync::Arc;
 use clap::{ArgAction, Parser};
-use std::path::PathBuf;
 use color_eyre::{
     eyre::{ensure, eyre},
     Result,
@@ -11,10 +9,12 @@ use kona_derive::{
     online::*,
     types::{L2BlockInfo, StageError},
 };
-use reqwest::Url;
-use tracing::{info, debug, error, trace, warn};
-use superchain_registry::ROLLUP_CONFIGS;
 use op_test_vectors::derivation::DerivationFixture;
+use reqwest::Url;
+use std::path::PathBuf;
+use std::sync::Arc;
+use superchain_registry::ROLLUP_CONFIGS;
+use tracing::{debug, error, info, trace, warn};
 
 /// The logging target to use for [tracing].
 const TARGET: &str = "from-l2";
@@ -153,11 +153,16 @@ impl FromL2 {
         // Construct the fixture blocks.
         let blocks = crate::cmd::build_fixture_blocks(
             cfg.batch_inbox_address,
-            cfg.genesis.system_config.as_ref().map(|sc| sc.batcher_address).unwrap_or_default(),
+            cfg.genesis
+                .system_config
+                .as_ref()
+                .map(|sc| sc.batcher_address)
+                .unwrap_or_default(),
             &l1_blocks,
             &mut l1_provider,
             &mut blob_provider,
-        ).await?;
+        )
+        .await?;
         let fixture = DerivationFixture::new(blocks, payloads);
         info!(target: TARGET, "Successfully built derivation test fixture");
 

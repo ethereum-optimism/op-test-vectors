@@ -1,6 +1,5 @@
 //! Contains logic to generate derivation test fixtures using L1 source block information.
 
-use std::sync::Arc;
 use clap::{ArgAction, Parser};
 use color_eyre::{
     eyre::{ensure, eyre},
@@ -9,15 +8,16 @@ use color_eyre::{
 use kona_derive::online::{
     AlloyChainProvider, OnlineBeaconClient, OnlineBlobProvider, SimpleSlotDerivation,
 };
-use op_test_vectors::derivation::DerivationFixture;
-use reqwest::Url;
-use std::path::PathBuf;
-use superchain_registry::ROLLUP_CONFIGS;
-use tracing::{info, debug, error, trace, warn};
 use kona_derive::{
     online::*,
     types::{L2BlockInfo, StageError},
 };
+use op_test_vectors::derivation::DerivationFixture;
+use reqwest::Url;
+use std::path::PathBuf;
+use std::sync::Arc;
+use superchain_registry::ROLLUP_CONFIGS;
+use tracing::{debug, error, info, trace, warn};
 
 /// The logging target to use for [tracing].
 const TARGET: &str = "from-l1";
@@ -68,7 +68,8 @@ impl FromL1 {
         let mut l1_provider = AlloyChainProvider::new_http(l1_rpc_url);
         let l2_rpc_url =
             Url::parse(&self.l2_rpc_url).map_err(|e| eyre!("Invalid L1 RPC URL: {}", e))?;
-        let mut l2_provider = AlloyL2ChainProvider::new_http(l2_rpc_url, Arc::new(Default::default()));
+        let mut l2_provider =
+            AlloyL2ChainProvider::new_http(l2_rpc_url, Arc::new(Default::default()));
         let l2_chain_id = l2_provider.chain_id().await.map_err(|e| eyre!(e))?;
         info!(target: "from-l1", "Using L1 Chain ID: {}", l2_chain_id);
         let config = ROLLUP_CONFIGS
@@ -288,5 +289,4 @@ impl FromL1 {
     pub fn beacon_url(&self) -> String {
         self.beacon_url.clone()
     }
-
 }

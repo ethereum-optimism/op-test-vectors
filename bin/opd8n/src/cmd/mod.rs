@@ -5,10 +5,10 @@ use color_eyre::eyre::{eyre, Result};
 use tracing::Level;
 
 pub mod blobs;
+pub mod fixtures;
 pub mod from_l1;
 pub mod from_l2;
 pub mod info;
-pub mod fixtures;
 pub use fixtures::build_fixture_blocks;
 
 /// Main opd8n CLI

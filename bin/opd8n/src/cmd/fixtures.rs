@@ -3,12 +3,12 @@
 use crate::cmd::blobs;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::Address;
-use op_test_vectors::derivation::FixtureBlock;
+use color_eyre::eyre::{eyre, Result};
 use kona_derive::online::{
     AlloyChainProvider, OnlineBeaconClient, OnlineBlobProvider, SimpleSlotDerivation,
 };
-use color_eyre::eyre::{Result, eyre};
 use kona_derive::traits::ChainProvider;
+use op_test_vectors::derivation::FixtureBlock;
 
 /// Constructs [FixtureBlock]s for the given L1 blocks.
 pub async fn build_fixture_blocks(

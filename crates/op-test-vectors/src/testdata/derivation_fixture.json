@@ -1,7 +1,25 @@
 {
-  "l2OutputRoots": [
-    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  "l2Payloads": [
+    {
+      "timestamp": 1722550777,
+      "prevRandao": "0x73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610",
+      "suggestedFeeRecipient": "0x4200000000000000000000000000000000000011",
+      "withdrawals": [],
+      "parentBeaconBlockRoot": "0x8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379",
+      "transactions": [],
+      "noTxPool": true,
+      "gasLimit": 30000000
+    },
+    {
+      "timestamp": 1722550779,
+      "prevRandao": "0x73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610",
+      "suggestedFeeRecipient": "0x4200000000000000000000000000000000000011",
+      "withdrawals": [],
+      "parentBeaconBlockRoot": "0x8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379",
+      "transactions": [],
+      "noTxPool": true,
+      "gasLimit": 30000000
+    }
   ],
   "l1Blocks": [
     {
