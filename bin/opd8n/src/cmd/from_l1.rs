@@ -5,9 +5,6 @@ use color_eyre::{
     eyre::{ensure, eyre},
     Result,
 };
-use kona_derive::online::{
-    AlloyChainProvider, OnlineBeaconClient, OnlineBlobProvider, SimpleSlotDerivation,
-};
 use kona_derive::{
     online::*,
     types::{L2BlockInfo, StageError},
@@ -85,9 +82,9 @@ impl FromL1 {
             .unwrap_or_default();
         info!(target: "from-l1", "Using signer address: {}", signer);
 
-        let beacon_client = OnlineBeaconClient::new_http(self.beacon_url.clone());
-        let mut blob_provider =
-            OnlineBlobProvider::<_, SimpleSlotDerivation>::new(beacon_client, None, None);
+        let mut blob_provider = OnlineBlobProviderBuilder::new()
+            .with_beacon_client(OnlineBeaconClient::new_http(self.beacon_url.clone()))
+            .build();
 
         // Construct the derivation fixture.
         let fixture_blocks = crate::cmd::build_fixture_blocks(
@@ -241,24 +238,33 @@ impl FromL1 {
         StatefulAttributesBuilder::new(cfg, l2_provider.clone(), l1_provider.clone())
     }
 
-    /// Returns a new [OnlineBlobProvider] using the beacon url.
-    pub fn blob_provider(&self) -> OnlineBlobProvider<OnlineBeaconClient, SimpleSlotDerivation> {
-        OnlineBlobProvider::new(
-            OnlineBeaconClient::new_http(self.beacon_url.clone()),
-            None,
-            None,
-        )
+    /// Returns a new [OnlineBlobProviderWithFallback] using the beacon url.
+    pub fn blob_provider(
+        &self,
+    ) -> OnlineBlobProviderWithFallback<OnlineBeaconClient, OnlineBeaconClient, SimpleSlotDerivation>
+    {
+        OnlineBlobProviderBuilder::new()
+            .with_beacon_client(OnlineBeaconClient::new_http(self.beacon_url.clone()))
+            .build()
     }
 
     /// Returns a new [EthereumDataSource] using the l1 provider and blob provider.
     pub fn dap(
         &self,
         l1_provider: AlloyChainProvider,
-        blob_provider: OnlineBlobProvider<OnlineBeaconClient, SimpleSlotDerivation>,
+        blob_provider: OnlineBlobProviderWithFallback<
+            OnlineBeaconClient,
+            OnlineBeaconClient,
+            SimpleSlotDerivation,
+        >,
         cfg: &RollupConfig,
     ) -> EthereumDataSource<
         AlloyChainProvider,
-        OnlineBlobProvider<OnlineBeaconClient, SimpleSlotDerivation>,
+        OnlineBlobProviderWithFallback<
+            OnlineBeaconClient,
+            OnlineBeaconClient,
+            SimpleSlotDerivation,
+        >,
     > {
         EthereumDataSource::new(l1_provider, blob_provider, cfg)
     }

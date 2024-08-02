@@ -35,17 +35,17 @@ alloy-eips = { version = "0.2" }
 alloy-rpc-types = { version = "0.2" }
 
 # Foundry Dependencies
-foundry-common = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
-foundry-compilers = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
-anvil = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
-anvil-core = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
-cast = { git = "https://github.com/foundry-rs/foundry", rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
-forge-script = { git = "https://github.com/foundry-rs/foundry", rev = "26a7559758c192911dd39ce7d621a18ef0d419e6" }
+foundry-common = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
+foundry-compilers = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
+anvil = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
+anvil-core = { git = "https://github.com/foundry-rs/foundry", default-features = true, rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
+cast = { git = "https://github.com/foundry-rs/foundry", rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
+forge-script = { git = "https://github.com/foundry-rs/foundry", rev = "c600237f3e54604274bfdcba627f347493fd21d2" }
 revm = { version = "12.1", features = ["alloydb", "optimism"] }
 
 # Kona + OP Types
 superchain-registry = "0.2.2"
-kona-derive = { git = "https://github.com/ethereum-optimism/kona", rev = "6f7c119d93c854d31de27feadbe11362bafe9cfc", features = ["online"] }
+kona-derive = { git = "https://github.com/ethereum-optimism/kona", rev = "4e57dd35ea08b31d0baa293c7a12165f28e6cd92", features = ["online"] }
 
 # Internal
 op-test-vectors = { path = "crates/op-test-vectors" }

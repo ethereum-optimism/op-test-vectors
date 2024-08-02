@@ -5,7 +5,7 @@ use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::Address;
 use color_eyre::eyre::{eyre, Result};
 use kona_derive::online::{
-    AlloyChainProvider, OnlineBeaconClient, OnlineBlobProvider, SimpleSlotDerivation,
+    AlloyChainProvider, OnlineBeaconClient, OnlineBlobProviderWithFallback, SimpleSlotDerivation,
 };
 use kona_derive::traits::ChainProvider;
 use op_test_vectors::derivation::FixtureBlock;
@@ -16,7 +16,11 @@ pub async fn build_fixture_blocks(
     signer: Address,
     blocks: &[u64],
     l1_provider: &mut AlloyChainProvider,
-    blob_provider: &mut OnlineBlobProvider<OnlineBeaconClient, SimpleSlotDerivation>,
+    blob_provider: &mut OnlineBlobProviderWithFallback<
+        OnlineBeaconClient,
+        OnlineBeaconClient,
+        SimpleSlotDerivation,
+    >,
 ) -> Result<Vec<FixtureBlock>> {
     let mut fixtures = Vec::with_capacity(blocks.len());
     for b in blocks {
