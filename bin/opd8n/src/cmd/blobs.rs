@@ -5,7 +5,9 @@ use alloy_primitives::{Address, TxKind};
 use color_eyre::Result;
 use tracing::warn;
 
-use kona_derive::online::{OnlineBeaconClient, OnlineBlobProvider, SimpleSlotDerivation};
+use kona_derive::online::{
+    OnlineBeaconClient, OnlineBlobProviderWithFallback, SimpleSlotDerivation,
+};
 use kona_derive::traits::BlobProvider;
 use kona_derive::types::{Blob, BlockInfo, IndexedBlobHash};
 
@@ -15,7 +17,11 @@ pub async fn load(
     txs: &[TxEnvelope],
     batcher_address: Address,
     signer: Address,
-    provider: &mut OnlineBlobProvider<OnlineBeaconClient, SimpleSlotDerivation>,
+    provider: &mut OnlineBlobProviderWithFallback<
+        OnlineBeaconClient,
+        OnlineBeaconClient,
+        SimpleSlotDerivation,
+    >,
 ) -> Result<Vec<Box<Blob>>> {
     let blob_hashes = extract_blob_data(batcher_address, signer, txs);
 
