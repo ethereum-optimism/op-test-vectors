@@ -1,7 +1,9 @@
 {
-  "number": 1,
-  "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  "timestamp": 102,
+  "header": {
+    "number": 1,
+    "parentHash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "timestamp": 102,
+  },
   "transactions": [
     {
       "EIP1559": {

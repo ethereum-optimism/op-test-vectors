@@ -1,13 +1,13 @@
 //! Module containing the derivation test fixture.
 
-use alloy_consensus::Blob;
-use alloy_primitives::{Bytes, B256};
+use alloy_consensus::{Blob, Header};
+use alloy_primitives::Bytes;
 use kona_derive::types::L2PayloadAttributes;
 use serde::{Deserialize, Serialize};
 
 /// The derivation fixture is the top-level object that contains
 /// everything needed to run a derivation test.
-#[derive(Serialize, Deserialize, Debug, Default, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct DerivationFixture {
     /// A list of L1 Blocks to derive from.
@@ -28,15 +28,13 @@ impl DerivationFixture {
 
 /// A fixture block is a minimal block with associated data including blobs
 /// to derive from.
-#[derive(Serialize, Deserialize, Debug, Default, Eq, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, Default, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct FixtureBlock {
-    /// The block number.
-    pub number: u64,
-    /// The block hash.
-    pub hash: B256,
-    /// The block timestamp.
-    pub timestamp: u64,
+    /// The block header.
+    /// The entire header is required to generate the block hash when deriving the l1 block info
+    /// tx.
+    pub header: Header,
     /// Block Transactions.
     /// EIP-2718 encoded raw transactions
     pub transactions: Vec<Bytes>,
@@ -47,14 +45,29 @@ pub struct FixtureBlock {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::{address, b256, bytes};
+    use alloy_primitives::{address, b256, bytes, uint};
 
     fn ref_blocks() -> Vec<FixtureBlock> {
         vec![
             FixtureBlock {
-                number: 1,
-                hash: b256!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
-                timestamp: 102,
+                header: Header {
+                    number: 1,
+                    parent_hash: b256!("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                    ommers_hash: b256!("1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+                    beneficiary: address!("0000000000000000000000000000000000000000"),
+                    state_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    transactions_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    receipts_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    logs_bloom: Default::default(),
+                    difficulty: uint!(0_U256),
+                    gas_limit: 0,
+                    gas_used: 0,
+                    mix_hash: b256!("0000000000000000000000000000000000000000000000000000000000000000"),
+                    nonce: Default::default(),
+                    extra_data: bytes!(""),
+                    timestamp: 102,
+                    ..Default::default()
+                },
                 transactions: vec![
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
@@ -63,9 +76,24 @@ mod tests {
                 blobs: vec![],
             },
             FixtureBlock {
-                number: 2,
-                hash: b256!("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"),
-                timestamp: 104,
+                header: Header {
+                    number: 2,
+                    parent_hash: b256!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
+                    ommers_hash: b256!("1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+                    beneficiary: address!("0000000000000000000000000000000000000000"),
+                    state_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    transactions_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    receipts_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    logs_bloom: Default::default(),
+                    difficulty: uint!(0_U256),
+                    gas_limit: 0,
+                    gas_used: 0,
+                    mix_hash: b256!("0000000000000000000000000000000000000000000000000000000000000000"),
+                    nonce: Default::default(),
+                    extra_data: bytes!(""),
+                    timestamp: 104,
+                    ..Default::default()
+                },
                 transactions: vec![
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
@@ -73,9 +101,24 @@ mod tests {
                 blobs: vec![],
             },
             FixtureBlock {
-                number: 2,
-                hash: b256!("dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"),
-                timestamp: 106,
+                header: Header {
+                    number: 2,
+                    parent_hash: b256!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"),
+                    ommers_hash: b256!("1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347"),
+                    beneficiary: address!("0000000000000000000000000000000000000000"),
+                    state_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    transactions_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    receipts_root: b256!("56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"),
+                    logs_bloom: Default::default(),
+                    difficulty: uint!(0_U256),
+                    gas_limit: 0,
+                    gas_used: 0,
+                    mix_hash: b256!("0000000000000000000000000000000000000000000000000000000000000000"),
+                    nonce: Default::default(),
+                    extra_data: bytes!(""),
+                    timestamp: 106,
+                    ..Default::default()
+                },
                 transactions: vec![
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                 ],
@@ -132,12 +175,12 @@ mod tests {
     fn test_fixture_block() {
         let fixture_str = include_str!("./testdata/fixture_block.json");
         let fixture: FixtureBlock = serde_json::from_str(fixture_str).unwrap();
-        assert_eq!(fixture.number, 1);
+        assert_eq!(fixture.header.number, 1);
         assert_eq!(
-            fixture.hash,
-            b256!("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+            fixture.header.parent_hash,
+            b256!("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         );
-        assert_eq!(fixture.timestamp, 102);
+        assert_eq!(fixture.header.timestamp, 102);
         assert_eq!(fixture.transactions.len(), 1);
         assert_eq!(fixture.blobs.len(), 0);
     }

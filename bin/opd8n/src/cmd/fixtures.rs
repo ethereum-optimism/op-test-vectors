@@ -28,6 +28,10 @@ pub async fn build_fixture_blocks(
             .block_info_by_number(*b)
             .await
             .map_err(|e| eyre!(e))?;
+        let block_header = l1_provider
+            .header_by_hash(block_info.hash)
+            .await
+            .map_err(|e| eyre!(e))?;
         let (_, txs) = l1_provider
             .block_info_and_transactions_by_hash(block_info.hash)
             .await
@@ -49,9 +53,7 @@ pub async fn build_fixture_blocks(
         .await?;
 
         let fixture = FixtureBlock {
-            number: *b,
-            hash: block_info.hash,
-            timestamp: block_info.timestamp,
+            header: block_header,
             transactions,
             blobs,
         };
