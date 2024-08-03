@@ -1,6 +1,6 @@
 //! Module containing the derivation test fixture.
 
-use alloy_consensus::{Blob, Header};
+use alloy_consensus::{Blob, Header, Receipt};
 use alloy_primitives::Bytes;
 use kona_derive::types::L2PayloadAttributes;
 use serde::{Deserialize, Serialize};
@@ -40,6 +40,8 @@ pub struct FixtureBlock {
     pub transactions: Vec<Bytes>,
     /// Blobs for this block.
     pub blobs: Vec<Box<Blob>>,
+    /// Receipts for this block.
+    pub receipts: Vec<Receipt>,
 }
 
 #[cfg(test)]
@@ -74,6 +76,18 @@ mod tests {
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                 ],
                 blobs: vec![],
+                receipts: vec![
+                    Receipt {
+                        status: alloy_consensus::Eip658Value::Eip658(true),
+                        cumulative_gas_used: 10,
+                        logs: vec![
+                            alloy_primitives::Log {
+                                address: address!("4200000000000000000000000000000000000011"),
+                                data: alloy_primitives::LogData::new_unchecked(vec![], bytes!("")),
+                            }
+                        ],
+                    },
+                ],
             },
             FixtureBlock {
                 header: Header {
@@ -99,6 +113,18 @@ mod tests {
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                 ],
                 blobs: vec![],
+                receipts: vec![
+                    Receipt {
+                        status: alloy_consensus::Eip658Value::Eip658(true),
+                        cumulative_gas_used: 10,
+                        logs: vec![
+                            alloy_primitives::Log {
+                                address: address!("4200000000000000000000000000000000000011"),
+                                data: alloy_primitives::LogData::new_unchecked(vec![], bytes!("")),
+                            }
+                        ],
+                    },
+                ],
             },
             FixtureBlock {
                 header: Header {
@@ -123,6 +149,18 @@ mod tests {
                     bytes!("02f870018307c100808476d0a39c82565f94388c818ca8b9251b393131c08a736a67ccb1929787b60572b2eb6c9080c001a033bee682348fa78ffc1027bc9981e7dc60eca03af909c4eb05720e781fdae179a01ccf85367c246082fa09ef748d3b07c90752c2b59034a6b881cf99aca586eaf5"),
                 ],
                 blobs: vec![],
+                receipts: vec![
+                    Receipt {
+                        status: alloy_consensus::Eip658Value::Eip658(true),
+                        cumulative_gas_used: 10,
+                        logs: vec![
+                            alloy_primitives::Log {
+                                address: address!("4200000000000000000000000000000000000011"),
+                                data: alloy_primitives::LogData::new_unchecked(vec![], bytes!("")),
+                            }
+                        ],
+                    },
+                ],
             },
         ]
     }

@@ -42,6 +42,10 @@ pub async fn build_fixture_blocks(
             tx.encode_2718(&mut out);
             transactions.push(out.into());
         }
+        let receipts = l1_provider
+            .receipts_by_hash(block_info.hash)
+            .await
+            .map_err(|e| eyre!(e))?;
 
         let blobs = blobs::load(
             &block_info,
@@ -56,6 +60,7 @@ pub async fn build_fixture_blocks(
             header: block_header,
             transactions,
             blobs,
+            receipts,
         };
         fixtures.push(fixture);
     }
