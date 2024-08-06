@@ -30,5 +30,13 @@
         "data":  "0x"
       }
     ]
-  }]
+  }],
+  "systemConfig": {
+    "batcherAddress": "0x3333333333333333333333333333333333333333",
+    "overhead": "0x8",
+    "scalar": "0x1",
+    "gasLimit": "0x0",
+    "baseFeeScalar": "0x0",
+    "blobBaseFeeScalar": "0x0",
+  }
 }

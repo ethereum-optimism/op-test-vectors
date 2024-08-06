@@ -56,52 +56,12 @@ impl FromL1 {
         );
         trace!(target: "from-l1", "Producing derivation fixture for L1 block range [{}, {}]", self.start_block, self.end_block);
 
-        // Construct a sequential list of block numbers from [start_block, end_block].
-        let blocks = (self.start_block..=self.end_block).collect::<Vec<_>>();
-
-        // Construct the providers
-        let l1_rpc_url =
-            Url::parse(&self.l1_rpc_url).map_err(|e| eyre!("Invalid L1 RPC URL: {}", e))?;
-        let mut l1_provider = AlloyChainProvider::new_http(l1_rpc_url);
-        let l2_rpc_url =
-            Url::parse(&self.l2_rpc_url).map_err(|e| eyre!("Invalid L1 RPC URL: {}", e))?;
-        let mut l2_provider =
-            AlloyL2ChainProvider::new_http(l2_rpc_url, Arc::new(Default::default()));
-        let l2_chain_id = l2_provider.chain_id().await.map_err(|e| eyre!(e))?;
-        info!(target: "from-l1", "Using L1 Chain ID: {}", l2_chain_id);
-        let config = ROLLUP_CONFIGS
-            .get(&l2_chain_id)
-            .ok_or_else(|| eyre!("No rollup config found for chain id: {}", l2_chain_id))?;
-        let batcher_address = config.batch_inbox_address;
-        info!(target: "from-l1", "Using batcher address: {}", batcher_address);
-        let signer = config
-            .genesis
-            .system_config
-            .as_ref()
-            .map(|sc| sc.batcher_address)
-            .unwrap_or_default();
-        info!(target: "from-l1", "Using signer address: {}", signer);
-
-        let mut blob_provider = OnlineBlobProviderBuilder::new()
-            .with_beacon_client(OnlineBeaconClient::new_http(self.beacon_url.clone()))
-            .build();
-
-        // Construct the derivation fixture.
-        let fixture_blocks = crate::cmd::build_fixture_blocks(
-            batcher_address,
-            signer,
-            &blocks,
-            &mut l1_provider,
-            &mut blob_provider,
-        )
-        .await?;
-
         // Build the pipeline
         let cfg = Arc::new(self.rollup_config().await?);
         let mut l1_provider = self.l1_provider()?;
         let mut l2_provider = self.l2_provider(cfg.clone())?;
         let attributes = self.attributes(cfg.clone(), &l2_provider, &l1_provider);
-        let blob_provider = self.blob_provider();
+        let mut blob_provider = self.blob_provider();
         let dap = self.dap(l1_provider.clone(), blob_provider.clone(), &cfg);
         let mut l2_cursor = self.cursor().await?;
         let l1_tip = l1_provider
@@ -119,6 +79,13 @@ impl FromL1 {
 
         let mut payloads = Vec::with_capacity((self.end_block - self.start_block) as usize);
 
+        let mut configs = Vec::new();
+        let first_system_config = l2_provider
+            .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
+            .await
+            .map_err(|e| eyre!(e))?;
+        configs.push(first_system_config);
+
         // Run the pipeline
         loop {
             // If the cursor is beyond the end block, break the loop.
@@ -130,7 +97,15 @@ impl FromL1 {
             // Step on the pipeline.
             match pipeline.step(l2_cursor).await {
                 StepResult::PreparedAttributes => trace!(target: "loop", "Prepared attributes"),
-                StepResult::AdvancedOrigin => trace!(target: "loop", "Advanced origin"),
+                StepResult::AdvancedOrigin => {
+                    trace!(target: "loop", "Advanced origin");
+                    // Add the system config 
+                    let system_config = l2_provider
+                        .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
+                        .await
+                        .map_err(|e| eyre!(e))?;
+                    configs.push(system_config);
+                }
                 StepResult::OriginAdvanceErr(e) => {
                     warn!(target: TARGET, "Could not advance origin: {:?}", e)
                 }
@@ -182,6 +157,24 @@ impl FromL1 {
                 }
             }
         }
+
+        // Construct a sequential list of block numbers from [start_block, end_block].
+        let blocks = (self.start_block..=self.end_block).collect::<Vec<_>>();
+
+        // Construct the derivation fixture.
+        let fixture_blocks = crate::cmd::build_fixture_blocks(
+            cfg.batch_inbox_address,
+            cfg.genesis
+                .system_config
+                .as_ref()
+                .map(|sc| sc.batcher_address)
+                .unwrap_or_default(),
+            &blocks,
+            &configs,
+            &mut l1_provider,
+            &mut blob_provider,
+        )
+        .await?;
 
         let fixture = DerivationFixture::new(fixture_blocks, payloads);
         info!(target: "from-l1", "Successfully built derivation test fixture");

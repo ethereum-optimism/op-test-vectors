@@ -2,7 +2,7 @@
 
 use alloy_consensus::{Blob, Header, Receipt};
 use alloy_primitives::Bytes;
-use kona_derive::types::L2PayloadAttributes;
+use kona_derive::types::{L2PayloadAttributes, SystemConfig};
 use serde::{Deserialize, Serialize};
 
 /// The derivation fixture is the top-level object that contains
@@ -42,6 +42,8 @@ pub struct FixtureBlock {
     pub blobs: Vec<Box<Blob>>,
     /// Receipts for this block.
     pub receipts: Vec<Receipt>,
+    /// The [SystemConfig] at this block height.
+    pub system_config: SystemConfig,
 }
 
 #[cfg(test)]
@@ -88,6 +90,14 @@ mod tests {
                         ],
                     },
                 ],
+                system_config: SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
             },
             FixtureBlock {
                 header: Header {
@@ -125,6 +135,14 @@ mod tests {
                         ],
                     },
                 ],
+                system_config: SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
             },
             FixtureBlock {
                 header: Header {
@@ -161,6 +179,14 @@ mod tests {
                         ],
                     },
                 ],
+                system_config: SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
             },
         ]
     }

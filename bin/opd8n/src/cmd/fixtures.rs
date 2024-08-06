@@ -7,6 +7,7 @@ use color_eyre::eyre::{eyre, Result};
 use kona_derive::online::{
     AlloyChainProvider, OnlineBeaconClient, OnlineBlobProviderWithFallback, SimpleSlotDerivation,
 };
+use kona_derive::types::SystemConfig;
 use kona_derive::traits::ChainProvider;
 use op_test_vectors::derivation::FixtureBlock;
 
@@ -15,6 +16,7 @@ pub async fn build_fixture_blocks(
     batcher_address: Address,
     signer: Address,
     blocks: &[u64],
+    configs: &[SystemConfig],
     l1_provider: &mut AlloyChainProvider,
     blob_provider: &mut OnlineBlobProviderWithFallback<
         OnlineBeaconClient,
@@ -23,7 +25,7 @@ pub async fn build_fixture_blocks(
     >,
 ) -> Result<Vec<FixtureBlock>> {
     let mut fixtures = Vec::with_capacity(blocks.len());
-    for b in blocks {
+    for (i, b) in blocks.iter().enumerate() {
         let block_info = l1_provider
             .block_info_by_number(*b)
             .await
@@ -61,6 +63,7 @@ pub async fn build_fixture_blocks(
             transactions,
             blobs,
             receipts,
+            system_config: configs.get(i).cloned().ok_or_else(|| eyre!("Missing config"))?,
         };
         fixtures.push(fixture);
     }

@@ -81,6 +81,12 @@ impl FromL2 {
         // Track the earliest l1 block and last l1 block.
         let first_l1_block = l2_cursor.l1_origin.number;
         let mut last_l1_block = l2_cursor.block_info.number;
+        let mut configs = Vec::new();
+        let first_system_config = l2_provider
+            .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
+            .await
+            .map_err(|e| eyre!(e))?;
+        configs.push(first_system_config);
 
         // Run the pipeline
         loop {
@@ -93,7 +99,15 @@ impl FromL2 {
             // Step on the pipeline.
             match pipeline.step(l2_cursor).await {
                 StepResult::PreparedAttributes => trace!(target: "loop", "Prepared attributes"),
-                StepResult::AdvancedOrigin => trace!(target: "loop", "Advanced origin"),
+                StepResult::AdvancedOrigin => {
+                    trace!(target: "loop", "Advanced origin");
+                    // Add the system config 
+                    let system_config = l2_provider
+                        .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
+                        .await
+                        .map_err(|e| eyre!(e))?;
+                    configs.push(system_config);
+                }
                 StepResult::OriginAdvanceErr(e) => {
                     warn!(target: TARGET, "Could not advance origin: {:?}", e)
                 }
@@ -159,6 +173,7 @@ impl FromL2 {
                 .map(|sc| sc.batcher_address)
                 .unwrap_or_default(),
             &l1_blocks,
+            &configs,
             &mut l1_provider,
             &mut blob_provider,
         )
