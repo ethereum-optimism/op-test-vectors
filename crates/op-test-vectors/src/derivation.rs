@@ -1,9 +1,9 @@
 //! Module containing the derivation test fixture.
 
-use alloy_consensus::{Blob, Header, Receipt};
+use alloy_consensus::{Header, Receipt};
 use alloy_primitives::Bytes;
 use hashbrown::HashMap;
-use kona_derive::types::{L2BlockInfo, L2PayloadAttributes, SystemConfig};
+use kona_derive::types::{Blob, L2BlockInfo, L2PayloadAttributes, SystemConfig};
 use serde::{Deserialize, Serialize};
 
 /// The derivation fixture is the top-level object that contains
