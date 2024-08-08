@@ -5,6 +5,7 @@ use color_eyre::{
     eyre::{ensure, eyre},
     Result,
 };
+use hashbrown::HashMap;
 use kona_derive::{
     online::*,
     types::{L2BlockInfo, StageError},
@@ -79,12 +80,14 @@ impl FromL1 {
 
         let mut payloads = Vec::with_capacity((self.end_block - self.start_block) as usize);
 
-        let mut configs = Vec::new();
+        let mut l2_block_infos = HashMap::new();
+        let mut configs = HashMap::new();
         let first_system_config = l2_provider
             .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
             .await
             .map_err(|e| eyre!(e))?;
-        configs.push(first_system_config);
+        configs.insert(l2_cursor.block_info.number, first_system_config);
+        l2_block_infos.insert(l2_cursor.block_info.number, l2_cursor);
 
         // Run the pipeline
         loop {
@@ -97,15 +100,7 @@ impl FromL1 {
             // Step on the pipeline.
             match pipeline.step(l2_cursor).await {
                 StepResult::PreparedAttributes => trace!(target: "loop", "Prepared attributes"),
-                StepResult::AdvancedOrigin => {
-                    trace!(target: "loop", "Advanced origin");
-                    // Add the system config 
-                    let system_config = l2_provider
-                        .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
-                        .await
-                        .map_err(|e| eyre!(e))?;
-                    configs.push(system_config);
-                }
+                StepResult::AdvancedOrigin => trace!(target: "loop", "Advanced origin"),
                 StepResult::OriginAdvanceErr(e) => {
                     warn!(target: TARGET, "Could not advance origin: {:?}", e)
                 }
@@ -156,6 +151,14 @@ impl FromL1 {
                     }
                 }
             }
+
+            // Add the system config
+            let system_config = l2_provider
+                .system_config_by_number(l2_cursor.block_info.number, Arc::clone(&cfg))
+                .await
+                .map_err(|e| eyre!(e))?;
+            configs.insert(l2_cursor.block_info.number, system_config);
+            l2_block_infos.insert(l2_cursor.block_info.number, l2_cursor);
         }
 
         // Construct a sequential list of block numbers from [start_block, end_block].
@@ -170,13 +173,12 @@ impl FromL1 {
                 .map(|sc| sc.batcher_address)
                 .unwrap_or_default(),
             &blocks,
-            &configs,
             &mut l1_provider,
             &mut blob_provider,
         )
         .await?;
 
-        let fixture = DerivationFixture::new(fixture_blocks, payloads);
+        let fixture = DerivationFixture::new(fixture_blocks, payloads, configs, l2_block_infos);
         info!(target: "from-l1", "Successfully built derivation test fixture");
 
         // Write the derivation fixture to the specified output location.

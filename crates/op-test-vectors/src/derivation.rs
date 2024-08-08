@@ -2,7 +2,8 @@
 
 use alloy_consensus::{Blob, Header, Receipt};
 use alloy_primitives::Bytes;
-use kona_derive::types::{L2PayloadAttributes, SystemConfig};
+use hashbrown::HashMap;
+use kona_derive::types::{L2BlockInfo, L2PayloadAttributes, SystemConfig};
 use serde::{Deserialize, Serialize};
 
 /// The derivation fixture is the top-level object that contains
@@ -14,14 +15,25 @@ pub struct DerivationFixture {
     pub l1_blocks: Vec<FixtureBlock>,
     /// A list of L2 payload attributes to assert against.
     pub l2_payloads: Vec<L2PayloadAttributes>,
+    /// A map of L2 block numbers to system configs.
+    pub l2_system_configs: HashMap<u64, SystemConfig>,
+    /// L2 block numbers mapped to their block info.
+    pub l2_block_infos: HashMap<u64, L2BlockInfo>,
 }
 
 impl DerivationFixture {
     /// Constructs a new [DerivationFixture] with the given L1 blocks and L2 Payload Attributes.
-    pub fn new(l1_blocks: Vec<FixtureBlock>, l2_payloads: Vec<L2PayloadAttributes>) -> Self {
+    pub fn new(
+        l1_blocks: Vec<FixtureBlock>,
+        l2_payloads: Vec<L2PayloadAttributes>,
+        configs: HashMap<u64, SystemConfig>,
+        l2_infos: HashMap<u64, L2BlockInfo>,
+    ) -> Self {
         Self {
             l1_blocks,
             l2_payloads,
+            l2_system_configs: configs,
+            l2_block_infos: l2_infos,
         }
     }
 }
@@ -42,14 +54,13 @@ pub struct FixtureBlock {
     pub blobs: Vec<Box<Blob>>,
     /// Receipts for this block.
     pub receipts: Vec<Receipt>,
-    /// The [SystemConfig] at this block height.
-    pub system_config: SystemConfig,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use alloy_primitives::{address, b256, bytes, uint};
+    use kona_derive::types::{BlockID, BlockInfo};
 
     fn ref_blocks() -> Vec<FixtureBlock> {
         vec![
@@ -90,14 +101,6 @@ mod tests {
                         ],
                     },
                 ],
-                system_config: SystemConfig {
-                    batcher_address: address!("3333333333333333333333333333333333333333"),
-                    overhead: uint!(8_U256),
-                    scalar: uint!(7_U256),
-                    gas_limit: 0,
-                    base_fee_scalar: Some(0),
-                    blob_base_fee_scalar: Some(0),
-                },
             },
             FixtureBlock {
                 header: Header {
@@ -135,14 +138,6 @@ mod tests {
                         ],
                     },
                 ],
-                system_config: SystemConfig {
-                    batcher_address: address!("3333333333333333333333333333333333333333"),
-                    overhead: uint!(8_U256),
-                    scalar: uint!(7_U256),
-                    gas_limit: 0,
-                    base_fee_scalar: Some(0),
-                    blob_base_fee_scalar: Some(0),
-                },
             },
             FixtureBlock {
                 header: Header {
@@ -179,14 +174,6 @@ mod tests {
                         ],
                     },
                 ],
-                system_config: SystemConfig {
-                    batcher_address: address!("3333333333333333333333333333333333333333"),
-                    overhead: uint!(8_U256),
-                    scalar: uint!(7_U256),
-                    gas_limit: 0,
-                    base_fee_scalar: Some(0),
-                    blob_base_fee_scalar: Some(0),
-                },
             },
         ]
     }
@@ -224,6 +211,121 @@ mod tests {
         ]
     }
 
+    fn ref_system_configs() -> HashMap<u64, SystemConfig> {
+        let configs: HashMap<u64, SystemConfig> = [
+            (
+                1,
+                SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
+            ),
+            (
+                2,
+                SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
+            ),
+            (
+                3,
+                SystemConfig {
+                    batcher_address: address!("3333333333333333333333333333333333333333"),
+                    overhead: uint!(8_U256),
+                    scalar: uint!(7_U256),
+                    gas_limit: 0,
+                    base_fee_scalar: Some(0),
+                    blob_base_fee_scalar: Some(0),
+                },
+            ),
+        ]
+        .into_iter()
+        .collect();
+        configs
+    }
+
+    fn ref_l2_block_infos() -> HashMap<u64, L2BlockInfo> {
+        let infos: HashMap<u64, L2BlockInfo> = [
+            (
+                1,
+                L2BlockInfo {
+                    block_info: BlockInfo {
+                        hash: b256!(
+                            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        ),
+                        number: 1,
+                        parent_hash: b256!(
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        ),
+                        timestamp: 102,
+                    },
+                    l1_origin: BlockID {
+                        hash: b256!(
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        ),
+                        number: 1,
+                    },
+                    seq_num: 0,
+                },
+            ),
+            (
+                2,
+                L2BlockInfo {
+                    block_info: BlockInfo {
+                        hash: b256!(
+                            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                        ),
+                        number: 2,
+                        parent_hash: b256!(
+                            "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                        ),
+                        timestamp: 104,
+                    },
+                    l1_origin: BlockID {
+                        hash: b256!(
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        ),
+                        number: 1,
+                    },
+                    seq_num: 0,
+                },
+            ),
+            (
+                3,
+                L2BlockInfo {
+                    block_info: BlockInfo {
+                        hash: b256!(
+                            "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+                        ),
+                        number: 3,
+                        parent_hash: b256!(
+                            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+                        ),
+                        timestamp: 106,
+                    },
+                    l1_origin: BlockID {
+                        hash: b256!(
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        ),
+                        number: 1,
+                    },
+                    seq_num: 0,
+                },
+            ),
+        ]
+        .into_iter()
+        .collect();
+        infos
+    }
+
     #[test]
     fn test_derivation_fixture() {
         let fixture_str = include_str!("./testdata/derivation_fixture.json");
@@ -231,6 +333,8 @@ mod tests {
         let expected = DerivationFixture {
             l1_blocks: ref_blocks(),
             l2_payloads: ref_payload_attributes(),
+            l2_system_configs: ref_system_configs(),
+            l2_block_infos: ref_l2_block_infos(),
         };
         assert_eq!(fixture, expected);
     }

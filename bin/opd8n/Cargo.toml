@@ -10,6 +10,7 @@ publish = false
 
 [dependencies]
 # Core
+hashbrown.workspace = true
 serde.workspace = true
 tracing.workspace = true
 serde_json.workspace = true

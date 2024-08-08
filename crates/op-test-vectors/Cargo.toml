@@ -13,6 +13,7 @@ edition.workspace = true
 # Core
 serde.workspace = true
 color-eyre.workspace = true
+hashbrown.workspace = true
 
 # Foundry
 anvil-core.workspace = true

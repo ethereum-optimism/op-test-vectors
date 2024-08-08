@@ -56,15 +56,7 @@
             "data":  "0x"
           }
         ]
-      }],
-      "systemConfig": {
-        "batcherAddress": "0x3333333333333333333333333333333333333333",
-        "overhead": "0x8",
-        "scalar": "0x1",
-        "gasLimit": "0x0",
-        "baseFeeScalar": "0x0",
-        "blobBaseFeeScalar": "0x0",
-      }
+      }]
     },
     {
       "header": {
@@ -99,15 +91,7 @@
             "data":  "0x"
           }
         ]
-      }],
-      "systemConfig": {
-        "batcherAddress": "0x3333333333333333333333333333333333333333",
-        "overhead": "0x8",
-        "scalar": "0x1",
-        "gasLimit": "0x0",
-        "baseFeeScalar": "0x0",
-        "blobBaseFeeScalar": "0x0",
-      }
+      }]
     },
     {
       "header": {
@@ -141,15 +125,74 @@
             "data":  "0x"
           }
         ]
-      }],
-      "systemConfig": {
-        "batcherAddress": "0x3333333333333333333333333333333333333333",
-        "overhead": "0x8",
-        "scalar": "0x1",
-        "gasLimit": "0x0",
-        "baseFeeScalar": "0x0",
-        "blobBaseFeeScalar": "0x0",
-      }
+      }]
     }
-  ]
+  ],
+  "l2SystemConfigs": {
+    "1": {
+      "batcherAddress": "0x3333333333333333333333333333333333333333",
+      "overhead": "0x8",
+      "scalar": "0x7",
+      "gasLimit": 0,
+      "baseFeeScalar": 0,
+      "blobBaseFeeScalar": 0
+    },
+    "2": {
+      "batcherAddress": "0x3333333333333333333333333333333333333333",
+      "overhead": "0x8",
+      "scalar": "0x7",
+      "gasLimit": 0,
+      "baseFeeScalar": 0,
+      "blobBaseFeeScalar": 0
+    },
+    "3": {
+      "batcherAddress": "0x3333333333333333333333333333333333333333",
+      "overhead": "0x8",
+      "scalar": "0x7",
+      "gasLimit": 0,
+      "baseFeeScalar": 0,
+      "blobBaseFeeScalar": 0
+    }
+  },
+  "l2BlockInfos": {
+    "1": {
+      "block_info": {
+        "hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "number": 1,
+        "parent_hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "timestamp": 102
+      },
+      "l1_origin": {
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "number": 1
+      },
+      "seq_num": 0
+    },
+    "2": {
+      "block_info": {
+        "hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "number": 2,
+        "parent_hash": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "timestamp": 104
+      },
+      "l1_origin": {
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "number": 1
+      },
+      "seq_num": 0
+    },
+    "3": {
+      "block_info": {
+        "hash": "0xdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "number": 3,
+        "parent_hash": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "timestamp": 106
+      },
+      "l1_origin": {
+        "hash": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "number": 1
+      },
+      "seq_num": 0
+    }
+  }
 }
