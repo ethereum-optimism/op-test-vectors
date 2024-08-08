@@ -180,35 +180,43 @@ mod tests {
 
     fn ref_payload_attributes() -> HashMap<u64, L2PayloadAttributes> {
         [
-            (1, L2PayloadAttributes {
-                timestamp: 1722550777,
-                fee_recipient: address!("4200000000000000000000000000000000000011"),
-                prev_randao: b256!(
-                    "73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610"
-                ),
-                parent_beacon_block_root: Some(b256!(
-                    "8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379"
-                )),
-                gas_limit: Some(30000000),
-                no_tx_pool: true,
-                withdrawals: Some(vec![]),
-                ..Default::default()
-            }),
-            (2, L2PayloadAttributes {
-                timestamp: 1722550779,
-                fee_recipient: address!("4200000000000000000000000000000000000011"),
-                prev_randao: b256!(
-                    "73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610"
-                ),
-                parent_beacon_block_root: Some(b256!(
-                    "8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379"
-                )),
-                gas_limit: Some(30000000),
-                withdrawals: Some(vec![]),
-                no_tx_pool: true,
-                ..Default::default()
-            }),
-        ].into_iter().collect()
+            (
+                1,
+                L2PayloadAttributes {
+                    timestamp: 1722550777,
+                    fee_recipient: address!("4200000000000000000000000000000000000011"),
+                    prev_randao: b256!(
+                        "73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610"
+                    ),
+                    parent_beacon_block_root: Some(b256!(
+                        "8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379"
+                    )),
+                    gas_limit: Some(30000000),
+                    no_tx_pool: true,
+                    withdrawals: Some(vec![]),
+                    ..Default::default()
+                },
+            ),
+            (
+                2,
+                L2PayloadAttributes {
+                    timestamp: 1722550779,
+                    fee_recipient: address!("4200000000000000000000000000000000000011"),
+                    prev_randao: b256!(
+                        "73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610"
+                    ),
+                    parent_beacon_block_root: Some(b256!(
+                        "8693a4b644bc68b8562194814d2945e4a78e2b20967c0a5c2f5f8e741be5a379"
+                    )),
+                    gas_limit: Some(30000000),
+                    withdrawals: Some(vec![]),
+                    no_tx_pool: true,
+                    ..Default::default()
+                },
+            ),
+        ]
+        .into_iter()
+        .collect()
     }
 
     fn ref_system_configs() -> HashMap<u64, SystemConfig> {
