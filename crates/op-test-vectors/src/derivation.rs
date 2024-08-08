@@ -13,8 +13,8 @@ use serde::{Deserialize, Serialize};
 pub struct DerivationFixture {
     /// A list of L1 Blocks to derive from.
     pub l1_blocks: Vec<FixtureBlock>,
-    /// A list of L2 payload attributes to assert against.
-    pub l2_payloads: Vec<L2PayloadAttributes>,
+    /// A map of L2 block number to l2 payload attributes.
+    pub l2_payloads: HashMap<u64, L2PayloadAttributes>,
     /// A map of L2 block numbers to system configs.
     pub l2_system_configs: HashMap<u64, SystemConfig>,
     /// L2 block numbers mapped to their block info.
@@ -25,7 +25,7 @@ impl DerivationFixture {
     /// Constructs a new [DerivationFixture] with the given L1 blocks and L2 Payload Attributes.
     pub fn new(
         l1_blocks: Vec<FixtureBlock>,
-        l2_payloads: Vec<L2PayloadAttributes>,
+        l2_payloads: HashMap<u64, L2PayloadAttributes>,
         configs: HashMap<u64, SystemConfig>,
         l2_infos: HashMap<u64, L2BlockInfo>,
     ) -> Self {
@@ -178,9 +178,9 @@ mod tests {
         ]
     }
 
-    fn ref_payload_attributes() -> Vec<L2PayloadAttributes> {
-        vec![
-            L2PayloadAttributes {
+    fn ref_payload_attributes() -> HashMap<u64, L2PayloadAttributes> {
+        [
+            (1, L2PayloadAttributes {
                 timestamp: 1722550777,
                 fee_recipient: address!("4200000000000000000000000000000000000011"),
                 prev_randao: b256!(
@@ -193,8 +193,8 @@ mod tests {
                 no_tx_pool: true,
                 withdrawals: Some(vec![]),
                 ..Default::default()
-            },
-            L2PayloadAttributes {
+            }),
+            (2, L2PayloadAttributes {
                 timestamp: 1722550779,
                 fee_recipient: address!("4200000000000000000000000000000000000011"),
                 prev_randao: b256!(
@@ -207,8 +207,8 @@ mod tests {
                 withdrawals: Some(vec![]),
                 no_tx_pool: true,
                 ..Default::default()
-            },
-        ]
+            }),
+        ].into_iter().collect()
     }
 
     fn ref_system_configs() -> HashMap<u64, SystemConfig> {

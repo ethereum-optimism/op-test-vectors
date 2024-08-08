@@ -1,6 +1,6 @@
 {
-  "l2Payloads": [
-    {
+  "l2Payloads": {
+    "1": {
       "timestamp": 1722550777,
       "prevRandao": "0x73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610",
       "suggestedFeeRecipient": "0x4200000000000000000000000000000000000011",
@@ -10,7 +10,7 @@
       "noTxPool": true,
       "gasLimit": 30000000
     },
-    {
+    "2": {
       "timestamp": 1722550779,
       "prevRandao": "0x73ce62c38a0714e87a4141f33ec2362dc800d7693d85e42ffe6bdc22a5c84610",
       "suggestedFeeRecipient": "0x4200000000000000000000000000000000000011",
@@ -20,7 +20,7 @@
       "noTxPool": true,
       "gasLimit": 30000000
     }
-  ],
+  },
   "l1Blocks": [
     {
       "header": {

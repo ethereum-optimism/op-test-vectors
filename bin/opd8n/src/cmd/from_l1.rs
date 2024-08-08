@@ -78,8 +78,7 @@ impl FromL1 {
             l1_tip,
         );
 
-        let mut payloads = Vec::with_capacity((self.end_block - self.start_block) as usize);
-
+        let mut payloads = HashMap::new();
         let mut l2_block_infos = HashMap::new();
         let mut configs = HashMap::new();
         let first_system_config = l2_provider
@@ -132,7 +131,7 @@ impl FromL1 {
                 "L2 Block [{}] L1 Range: [{}, {}]",
                 derived, l2_block_info.l1_origin.number, origin.number
             );
-            payloads.push(attributes.attributes);
+            payloads.insert(derived as u64, attributes.attributes);
 
             // Keep trying to advance the cursor in case the fetch fails.
             loop {

@@ -77,7 +77,7 @@ impl FromL2 {
         );
 
         // Collect the output payload attributes.
-        let mut payloads = Vec::with_capacity((self.end_block - self.start_block) as usize);
+        let mut payloads = HashMap::new();
 
         // Track the earliest l1 block and last l1 block.
         let first_l1_block = l2_cursor.l1_origin.number;
@@ -134,7 +134,7 @@ impl FromL2 {
                 "L2 Block [{}] L1 Range: [{}, {}]",
                 derived, l2_block_info.l1_origin.number, origin.number
             );
-            payloads.push(attributes.attributes);
+            payloads.insert(derived as u64, attributes.attributes);
             last_l1_block = origin.number;
 
             // Keep trying to advance the cursor in case the fetch fails.
