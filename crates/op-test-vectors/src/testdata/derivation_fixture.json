@@ -1,4 +1,31 @@
 {
+  "rollupConfig": {
+    "genesis": {
+      "l1": {
+        "hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "number": 0
+      },
+      "l2": {
+        "hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "number": 0
+      },
+      "l2_time": 0
+    },
+    "block_time": 0,
+    "max_sequencer_drift": 0,
+    "seq_window_size": 0,
+    "channel_timeout": 0,
+    "l1_chain_id": 0,
+    "l2_chain_id": 0,
+    "base_fee_params": {
+      "max_change_denominator": 50,
+      "elasticity_multiplier": 6
+    },
+    "batch_inbox_address": "0x0000000000000000000000000000000000000000",
+    "deposit_contract_address": "0x0000000000000000000000000000000000000000",
+    "l1_system_config_address": "0x0000000000000000000000000000000000000000",
+    "protocol_versions_address": "0x0000000000000000000000000000000000000000"
+  },
   "l2Payloads": {
     "1": {
       "timestamp": 1722550777,

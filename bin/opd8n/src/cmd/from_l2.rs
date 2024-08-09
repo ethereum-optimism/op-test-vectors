@@ -180,7 +180,13 @@ impl FromL2 {
             &mut blob_provider,
         )
         .await?;
-        let fixture = DerivationFixture::new(blocks, payloads, configs, l2_block_infos);
+        let fixture = DerivationFixture::new(
+            Arc::unwrap_or_clone(cfg),
+            blocks,
+            payloads,
+            configs,
+            l2_block_infos,
+        );
         info!(target: TARGET, "Successfully built derivation test fixture");
 
         // Write the derivation fixture to the specified output location.

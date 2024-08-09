@@ -177,7 +177,13 @@ impl FromL1 {
         )
         .await?;
 
-        let fixture = DerivationFixture::new(fixture_blocks, payloads, configs, l2_block_infos);
+        let fixture = DerivationFixture::new(
+            Arc::unwrap_or_clone(cfg),
+            fixture_blocks,
+            payloads,
+            configs,
+            l2_block_infos,
+        );
         info!(target: "from-l1", "Successfully built derivation test fixture");
 
         // Write the derivation fixture to the specified output location.

@@ -3,7 +3,7 @@
 use alloy_consensus::{Header, Receipt};
 use alloy_primitives::Bytes;
 use hashbrown::HashMap;
-use kona_derive::types::{Blob, L2BlockInfo, L2PayloadAttributes, SystemConfig};
+use kona_derive::types::{Blob, L2BlockInfo, L2PayloadAttributes, RollupConfig, SystemConfig};
 use serde::{Deserialize, Serialize};
 
 /// The derivation fixture is the top-level object that contains
@@ -11,6 +11,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, Debug, Default, Eq, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct DerivationFixture {
+    /// The rollup config.
+    pub rollup_config: RollupConfig,
     /// A list of L1 Blocks to derive from.
     pub l1_blocks: Vec<FixtureBlock>,
     /// A map of L2 block number to l2 payload attributes.
@@ -24,12 +26,14 @@ pub struct DerivationFixture {
 impl DerivationFixture {
     /// Constructs a new [DerivationFixture] with the given L1 blocks and L2 Payload Attributes.
     pub fn new(
+        rollup_config: RollupConfig,
         l1_blocks: Vec<FixtureBlock>,
         l2_payloads: HashMap<u64, L2PayloadAttributes>,
         configs: HashMap<u64, SystemConfig>,
         l2_infos: HashMap<u64, L2BlockInfo>,
     ) -> Self {
         Self {
+            rollup_config,
             l1_blocks,
             l2_payloads,
             l2_system_configs: configs,
@@ -334,11 +338,16 @@ mod tests {
         infos
     }
 
+    fn ref_rollup_config() -> RollupConfig {
+        RollupConfig::default()
+    }
+
     #[test]
     fn test_derivation_fixture() {
         let fixture_str = include_str!("./testdata/derivation_fixture.json");
         let fixture: DerivationFixture = serde_json::from_str(fixture_str).unwrap();
         let expected = DerivationFixture {
+            rollup_config: ref_rollup_config(),
             l1_blocks: ref_blocks(),
             l2_payloads: ref_payload_attributes(),
             l2_system_configs: ref_system_configs(),
